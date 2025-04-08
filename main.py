@@ -8,10 +8,10 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 
 def scrape_yorumlar_and_save_csv(url, output_file="yorumlar.csv"):
-    # Chrome setup
+    # Setup Chrome
     chrome_options = Options()
     chrome_options.add_argument("--start-maximized")
-    # chrome_options.add_argument("--headless")  # Optional headless mode
+    # chrome_options.add_argument("--headless")  # Uncomment for background run
 
     service = Service(executable_path="chromedriver.exe")
     driver = webdriver.Chrome(service=service, options=chrome_options)
@@ -19,7 +19,7 @@ def scrape_yorumlar_and_save_csv(url, output_file="yorumlar.csv"):
     try:
         driver.get(url)
 
-        # Step 1: Click 'Yorumlar'
+        # Step 1: Click the 'Yorumlar' button
         containers = WebDriverWait(driver, 10).until(
             EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".bJzME.tTVLSc"))
         )
@@ -42,34 +42,34 @@ def scrape_yorumlar_and_save_csv(url, output_file="yorumlar.csv"):
 
         time.sleep(1)
 
-        # Step 2: Wait for scrollable container
+        # Step 2: Wait for review scroll container
         scroll_container = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located(
                 (By.CSS_SELECTOR, ".m6QErb.DxyBCb.kA9KIf.dS8AEf.XiKgde")
             )
         )
 
-        # Step 3: Scroll down 4 times
-        for i in range(4):
+        # Step 3: Scroll down multiple times
+        for i in range(10):
             driver.execute_script(
                 "arguments[0].scrollTop = arguments[0].scrollHeight", scroll_container
             )
             print(f"Scrolled {i+1}/4")
             time.sleep(2)
 
-        # Step 4: Click all "Daha fazla" to expand full reviews
-        daha_fazla_elements = driver.find_elements(By.XPATH, "//span[text()='Daha fazla']")
-        print(f"Found {len(daha_fazla_elements)} 'Daha fazla' elements.")
-        for i, elem in enumerate(daha_fazla_elements):
+        # Step 4: Expand all reviews by clicking 'w8nwRe kyuRq' buttons
+        expand_buttons = driver.find_elements(By.CSS_SELECTOR, ".w8nwRe.kyuRq")
+        print(f"Found {len(expand_buttons)} expandable review buttons.")
+        for i, btn in enumerate(expand_buttons):
             try:
-                driver.execute_script("arguments[0].click();", elem)
-                time.sleep(0.2)  # slight delay between clicks
+                driver.execute_script("arguments[0].click();", btn)
+                time.sleep(0.2)
             except Exception as e:
-                print(f"Couldn't click 'Daha fazla' #{i}: {e}")
+                print(f"Could not click expand button #{i}: {e}")
 
-        time.sleep(1)
+        time.sleep(2)
 
-        # Step 5: Collect all reviews
+        # Step 5: Collect full reviews
         review_elements = driver.find_elements(By.CSS_SELECTOR, ".jftiEf.fontBodyMedium")
         reviews = [el.text.strip() for el in review_elements if el.text.strip() != ""]
 
