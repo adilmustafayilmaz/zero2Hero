@@ -6,6 +6,8 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
+from bs4 import BeautifulSoup
+
 
 def scrape_yorumlar_and_save_csv(url, output_file="yorumlar.csv"):
     # Setup Chrome
@@ -50,7 +52,7 @@ def scrape_yorumlar_and_save_csv(url, output_file="yorumlar.csv"):
         )
 
         # Step 3: Scroll down multiple times
-        for i in range(10):
+        for i in range(2):
             driver.execute_script(
                 "arguments[0].scrollTop = arguments[0].scrollHeight", scroll_container
             )
@@ -71,18 +73,24 @@ def scrape_yorumlar_and_save_csv(url, output_file="yorumlar.csv"):
 
         # Step 5: Collect full reviews
         review_elements = driver.find_elements(By.CSS_SELECTOR, ".jftiEf.fontBodyMedium")
-        reviews = [el.text.strip() for el in review_elements if el.text.strip() != ""]
 
-        print(f"\n✅ Collected {len(reviews)} full reviews.")
-
-        # Step 6: Save to CSV
-        with open(output_file, mode='w', newline='', encoding='utf-8') as file:
+        with open("reviews.csv", mode="w", newline='', encoding="utf-8") as file:
             writer = csv.writer(file)
-            writer.writerow(["Review"])
-            for review in reviews:
-                writer.writerow([review])
+            writer.writerow(['Username', 'Rating', 'Review'])  # Header
+            for element in review_elements:
+                html = element.get_attribute('innerHTML')
+                soup = BeautifulSoup(html, 'html.parser')
+                username = soup.find('div', class_='d4r55')
+                rating = soup.find('span', class_='fzvQIb')
+                print(rating)
+                review_text = soup.find('span', class_='wiI7pd')
 
-        print(f"✅ Saved to {output_file}")
+                username_text = username.get_text(strip=True) if username else ''
+                rating_text = rating.get_text(strip=True) if rating else ''
+                review_text_text = review_text.get_text(strip=True) if review_text else ''
+                writer.writerow([username_text, rating_text, review_text_text])
+
+            print("✅ Data successfully saved to reviews.csv")
 
     except Exception as e:
         print(f"Error: {e}")
