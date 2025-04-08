@@ -82,7 +82,6 @@ def scrape_yorumlar_and_save_csv(url, output_file="yorumlar.csv"):
                 soup = BeautifulSoup(html, 'html.parser')
                 username = soup.find('div', class_='d4r55')
                 rating = soup.find('span', class_='fzvQIb')
-                print(rating)
                 review_text = soup.find('span', class_='wiI7pd')
 
                 username_text = username.get_text(strip=True) if username else ''
