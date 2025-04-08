@@ -7,6 +7,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 from bs4 import BeautifulSoup
+import pandas as pd
+
+NUMBER_OF_SCROLL = 4
+csv_file = "location_links.csv"
 
 
 def scrape_yorumlar_and_save_csv(url, output_file="yorumlar.csv"):
@@ -20,6 +24,13 @@ def scrape_yorumlar_and_save_csv(url, output_file="yorumlar.csv"):
 
     try:
         driver.get(url)
+
+        element = driver.find_element(By.CSS_SELECTOR, "h1.DUwDvf.lfPIob")
+
+        # İçindeki metni al ve bir değişkene ata
+        baslik = element.text
+        baslik = baslik.replace(" ", "_")
+        baslik = baslik + "_reviews" + ".csv" 
 
         # Step 1: Click the 'Yorumlar' button
         containers = WebDriverWait(driver, 10).until(
@@ -52,11 +63,11 @@ def scrape_yorumlar_and_save_csv(url, output_file="yorumlar.csv"):
         )
 
         # Step 3: Scroll down multiple times
-        for i in range(2):
+        for i in range(NUMBER_OF_SCROLL):
             driver.execute_script(
                 "arguments[0].scrollTop = arguments[0].scrollHeight", scroll_container
             )
-            print(f"Scrolled {i+1}/4")
+            print(f"Scrolled {i+1}/" + str(NUMBER_OF_SCROLL))
             time.sleep(2)
 
         # Step 4: Expand all reviews by clicking 'w8nwRe kyuRq' buttons
@@ -74,7 +85,7 @@ def scrape_yorumlar_and_save_csv(url, output_file="yorumlar.csv"):
         # Step 5: Collect full reviews
         review_elements = driver.find_elements(By.CSS_SELECTOR, ".jftiEf.fontBodyMedium")
 
-        with open("reviews.csv", mode="w", newline='', encoding="utf-8") as file:
+        with open(baslik, mode="w", newline='', encoding="utf-8") as file:
             writer = csv.writer(file)
             writer.writerow(['Username', 'Rating', 'Review'])  # Header
             for element in review_elements:
@@ -89,7 +100,7 @@ def scrape_yorumlar_and_save_csv(url, output_file="yorumlar.csv"):
                 review_text_text = review_text.get_text(strip=True) if review_text else ''
                 writer.writerow([username_text, rating_text, review_text_text])
 
-            print("✅ Data successfully saved to reviews.csv")
+            print("✅ Data successfully saved to " + baslik)
 
     except Exception as e:
         print(f"Error: {e}")
@@ -97,5 +108,30 @@ def scrape_yorumlar_and_save_csv(url, output_file="yorumlar.csv"):
     finally:
         driver.quit()
 
-# Example usage
-scrape_yorumlar_and_save_csv("https://www.google.com/maps/place/Olea+Otel/@36.7161891,37.1104029,17z/data=!4m10!3m9!1s0x152fce1b1f01923f:0xc947ec11a420a70!5m3!1s2025-04-08!4m1!1i2!8m2!3d36.7161848!4d37.1129778!16s%2Fg%2F11b6wjf1p_?authuser=0&hl=tr&entry=ttu&g_ep=EgoyMDI1MDQwMi4xIKXMDSoASAFQAw%3D%3D", "yorumlar.csv")
+
+def get_location_links(csv_path):
+    """
+    Reads a CSV file with a 'Location Link' column and returns a list of links.
+    
+    Parameters:
+        csv_path (str): The path to the CSV file.
+    
+    Returns:
+        list: A list of all location links.
+    """
+    df = pd.read_csv(csv_path)
+
+    # Check if the expected column exists
+    if "Location Link" not in df.columns:
+        raise ValueError("The CSV file must contain a 'Location Link' column.")
+
+    links = df["Location Link"].dropna().tolist()
+    return links
+
+
+if __name__ == "__main__":
+    location_links = get_location_links(csv_file)
+    i = 0
+    for link in location_links:
+        scrape_yorumlar_and_save_csv(link, ("review" + str(i) + ".csv"))
+        i += 1
