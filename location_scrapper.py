@@ -12,9 +12,9 @@ options.add_argument("--start-maximized")
 driver = webdriver.Chrome(service=service, options=options)
 
 
-NUMBER_OF_SCROLL = 4
+NUMBER_OF_SCROLL = 25
 # Google Maps URL'si
-url = "https://www.google.com/maps/search/kilis+kafe/@36.7178433,37.0338201,12z/data=!3m1!4b1?hl=tr&entry=ttu&g_ep=EgoyMDI1MDQwMi4xIKXMDSoASAFQAw%3D%3D"
+url = "https://www.google.com/maps/search/kilis+restoran/@36.7176071,37.1040098,15z/data=!4m2!2m1!6e5?entry=ttu&g_ep=EgoyMDI1MDQwNi4wIKXMDSoASAFQAw%3D%3D"
 
 
 
@@ -22,7 +22,7 @@ url = "https://www.google.com/maps/search/kilis+kafe/@36.7178433,37.0338201,12z/
 driver.get(url)
 
 # Sayfanın yüklenmesini bekle
-time.sleep(10)
+time.sleep(4)
 
 # Soldaki scroll edilebilir bölgeyi bul
 scrollable_div = driver.find_element(By.XPATH, '//div[@role="feed"]')
@@ -30,10 +30,10 @@ scrollable_div = driver.find_element(By.XPATH, '//div[@role="feed"]')
 # 4 kez aşağı kaydır
 for _ in range(NUMBER_OF_SCROLL):
     driver.execute_script("arguments[0].scrollTop = arguments[0].scrollTop + arguments[0].offsetHeight;", scrollable_div)
-    time.sleep(3)
+    time.sleep(2)
 
 # Lokasyon kartlarını topla
-time.sleep(5)  # Scroll sonrası yeni içerik yüklenmesi için bekle
+time.sleep(2)  # Scroll sonrası yeni içerik yüklenmesi için bekle
 cards = driver.find_elements(By.XPATH, '//a[contains(@href, "/place/")]')
 
 # Linkleri al ve filtrele

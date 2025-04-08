@@ -8,10 +8,11 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 from bs4 import BeautifulSoup
 import pandas as pd
+import os
 
-NUMBER_OF_SCROLL = 4
+NUMBER_OF_SCROLL = 25
 csv_file = "location_links.csv"
-
+FOLDER_NAME = 'Kilis_Restoran'
 
 def scrape_yorumlar_and_save_csv(url, output_file="yorumlar.csv"):
     # Setup Chrome
@@ -84,6 +85,10 @@ def scrape_yorumlar_and_save_csv(url, output_file="yorumlar.csv"):
 
         # Step 5: Collect full reviews
         review_elements = driver.find_elements(By.CSS_SELECTOR, ".jftiEf.fontBodyMedium")
+
+        # Create folder and add csv file to that folder
+        os.makedirs(FOLDER_NAME, exist_ok=True)
+        baslik = os.path.join(FOLDER_NAME, baslik)
 
         with open(baslik, mode="w", newline='', encoding="utf-8") as file:
             writer = csv.writer(file)
