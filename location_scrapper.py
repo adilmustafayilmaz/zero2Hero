@@ -12,9 +12,9 @@ options.add_argument("--start-maximized")
 driver = webdriver.Chrome(service=service, options=options)
 
 
-NUMBER_OF_SCROLL = 25
+NUMBER_OF_SCROLL = 15
 # Google Maps URL'si
-url = "https://www.google.com/maps/search/kilis+restoran/@36.7176071,37.1040098,15z/data=!4m2!2m1!6e5?entry=ttu&g_ep=EgoyMDI1MDQwNi4wIKXMDSoASAFQAw%3D%3D"
+url = "https://www.google.com/maps/search/kilis+kafe/@36.7162303,37.1063867,15z/data=!3m1!4b1!4m4!2m3!5m2!5m1!1s2025-04-09?entry=ttu&g_ep=EgoyMDI1MDQwNi4wIKXMDSoASAFQAw%3D%3D"
 
 
 
