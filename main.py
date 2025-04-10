@@ -3,11 +3,11 @@ import review_scrapper2
 import time
 
 
-URL="https://www.google.com/maps/search/otel+near+%C5%9Eanl%C4%B1urfa/@37.1571649,38.7771913,15z/data=!3m1!4b1!4m4!2m3!5m2!5m1!1s2025-04-09?entry=ttu&g_ep=EgoyMDI1MDQwNy4wIKXMDSoASAFQAw%3D%3D" # Google Maps URL
-NUM_OF_SCROLL_LOCATION=40 # Number of scrolls for location links
-NUM_OF_SCROLL_REVIEW=40 # Number of scrolls for reviews
-FOLDER_NAME = 'Şanlıurfa_Otel' # Folder to save CSV files
-HTML_FOLDER_NAME = 'HTML_Reviews_Şanlıurfa_Otel' # Folder to save HTML files
+URL="https://www.google.com/maps/search/travel+agency+near+%C5%9Eanl%C4%B1urfa/@37.1637302,38.7771263,14z/data=!4m2!2m1!6e1?entry=ttu&g_ep=EgoyMDI1MDQwNy4wIKXMDSoASAFQAw%3D%3D" # Google Maps URL
+NUM_OF_SCROLL_LOCATION=10 # Number of scrolls for location links
+NUM_OF_SCROLL_REVIEW=15 # Number of scrolls for reviews
+FOLDER_NAME = 'Şanlıurfa_Travel_Agency' # Folder to save CSV files
+HTML_FOLDER_NAME = 'HTML_Reviews_Şanlıurfa_Travler_Agency' # Folder to save HTML files
 
 # DO NOT CHANGE THIS
 csv_path = "location_links.csv"
