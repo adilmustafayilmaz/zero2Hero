@@ -12,15 +12,14 @@ import os
 import codecs
 import re
 
-NUMBER_OF_SCROLL = 20 # Number of scrolls to perform
-csv_file = "location_links.csv" # Path to the CSV file containing location links
-FOLDER_NAME = 'Kilis_Kafe' # Folder to save CSV files
-HTML_FOLDER_NAME = 'HTML_Reviews' # Folder to save HTML files
 
-def scrape_yorumlar_and_save_csv(url, output_file="yorumlar.csv"):
+csv_file = "location_links.csv" # Path to the CSV file containing location links # Folder to save CSV files
+
+
+def scrape_reviews_and_save_csv(url, NUMBER_OF_SCROLL, FOLDER_NAME, HTML_FOLDER_NAME):
     # Setup Chrome
     chrome_options = Options()
-    chrome_options.add_argument("--start-maximized")
+    chrome_options.add_argument("--headless=new")
     # chrome_options.add_argument("--headless")  # Uncomment for background run
 
     service = Service(executable_path="chromedriver.exe")
@@ -335,7 +334,8 @@ def get_location_links(csv_path):
 
 if __name__ == "__main__":
     location_links = get_location_links(csv_file)
+    # scrape_yorumlar_and_save_csv("https://www.google.com/maps/place/K%C4%B0L%C4%B0S+M%C3%9CZES%C4%B0/@36.7174488,37.1151824,17z/data=!4m6!3m5!1s0x152fcf6bf93e7d81:0xb3864b35809cace4!8m2!3d36.7174488!4d37.1177573!16s%2Fg%2F11r10byjgn?entry=ttu&g_ep=EgoyMDI1MDQwNi4wIKXMDSoASAFQAw%3D%3D", ("review" + ".csv"))
     i = 0
     for link in location_links:
-        scrape_yorumlar_and_save_csv(link, ("review" + str(i) + ".csv"))
+        scrape_reviews_and_save_csv(link, ("review" + str(i) + ".csv"))
         i += 1
