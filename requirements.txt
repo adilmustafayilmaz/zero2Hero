@@ -1,0 +1,6 @@
+selenium==4.31.0
+pandas
+beautifulsoup4
+PyQt5
+requests
+urllib3

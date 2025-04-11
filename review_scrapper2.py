@@ -72,7 +72,7 @@ def scrape_reviews_and_save_csv(url, NUMBER_OF_SCROLL, FOLDER_NAME, HTML_FOLDER_
                 "arguments[0].scrollTop = arguments[0].scrollHeight", scroll_container
             )
             print(f"Scrolled {i+1}/" + str(NUMBER_OF_SCROLL))
-            time.sleep(2)
+            time.sleep(1)
 
         # Step 4: Expand all reviews by clicking 'w8nwRe kyuRq' buttons
         expand_buttons = driver.find_elements(By.CSS_SELECTOR, ".w8nwRe.kyuRq")
@@ -84,7 +84,7 @@ def scrape_reviews_and_save_csv(url, NUMBER_OF_SCROLL, FOLDER_NAME, HTML_FOLDER_
             except Exception as e:
                 print(f"Could not click expand button #{i}: {e}")
 
-        time.sleep(2)
+        time.sleep(1)
 
         # Step 5: Collect full reviews
         review_elements = driver.find_elements(By.CSS_SELECTOR, ".jftiEf.fontBodyMedium")
@@ -330,12 +330,3 @@ def get_location_links(csv_path):
 
     links = df["Location Link"].dropna().tolist()
     return links
-
-
-if __name__ == "__main__":
-    location_links = get_location_links(csv_file)
-    # scrape_yorumlar_and_save_csv("https://www.google.com/maps/place/K%C4%B0L%C4%B0S+M%C3%9CZES%C4%B0/@36.7174488,37.1151824,17z/data=!4m6!3m5!1s0x152fcf6bf93e7d81:0xb3864b35809cace4!8m2!3d36.7174488!4d37.1177573!16s%2Fg%2F11r10byjgn?entry=ttu&g_ep=EgoyMDI1MDQwNi4wIKXMDSoASAFQAw%3D%3D", ("review" + ".csv"))
-    i = 0
-    for link in location_links:
-        scrape_reviews_and_save_csv(link, ("review" + str(i) + ".csv"))
-        i += 1
